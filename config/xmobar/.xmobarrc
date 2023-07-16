@@ -1,0 +1,51 @@
+Config { overrideRedirect = False
+       , font            = "JetBrainsMono Nerd Font Medium 20"
+       , additionalFonts = ["JetBrainsMono Nerd Font Medium 35"]
+       , bgColor         = "#2E3440"
+       , fgColor         = "#ECEFF4"
+       , alpha           = 225
+       , position        = Static { xpos=10, ypos=10, width=3820, height=50}
+       , commands        = [ Run Weather "KAUS"
+                               [ "--template", " <tempC>°C"
+                                      , "-L", "0"
+                               , "-H", "25"
+                               , "--low"   , "lightblue"
+                               , "--normal", "#f8f8f2"
+                               , "--high"  , "red"
+                               ] 36000
+                           , Run Cpu
+                               [ "--template", " <total>%"
+                               , "-L", "3"
+                               , "-H", "50"
+                               , "--high"  , "red"
+                               , "--normal", "green"
+                               ] 10
+                           , Run Alsa "default" "Master"
+                               [ "--template", "<status>"
+                               , "--suffix"  , "True"
+                               , "--"
+                               , "--on", "<volume>"
+                               , "--highs", "󰕾 "
+                               , "--mediums",  "󰖀 "
+                               , "--lows", "󰕿 "
+                               ]
+						   , Run Battery 
+							   [
+							   "-t","󰁹 <left>%"
+							   ,"-L","25"
+							   ,"-H","80"
+							   ,"--high","green"
+							   ,"--normal","yellow"
+							   ,"--low","red"
+							   ] 10
+						   , Run Wireless "wlan0" [ "-t", "  <essid>" ] 10
+						   , Run Memory ["--template", "󰍛 <usedratio>%"] 10
+                           , Run Date "%a %Y-%m-%d <fc=#8be9fd>%H:%M:%S</fc>" "date" 10
+                           , Run XMonadLog
+                           ]
+       , sepChar         = "%"
+       , alignSep        = "}{"
+       , template        = "   %XMonadLog% } <fn=1><fc=#37b3f1></fc></fn> { %alsa:default:Master%  •  %cpu%  •  %memory%  •  %KAUS%  •  %wlan0wi%  •  %battery%  •  %date%    "
+
+       }
+
