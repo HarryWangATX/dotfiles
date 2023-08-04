@@ -40,7 +40,7 @@ xmonad &
 xmonad_pid=$!
 
 xrandr --auto --output HDMI-1-0 --mode 3840x2160 --left-of eDP-1
-feh --bg-fill ~/Pictures/WPs/night.png
+feh --bg-fill ~/Pictures/WPs/wallhaven-76d5xv.png
 xsetroot -cursor_name left_ptr
 
 wait $xmonad_pid

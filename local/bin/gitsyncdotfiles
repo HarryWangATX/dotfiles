@@ -1,0 +1,54 @@
+#!/bin/bash
+
+rm -rf /home/harry/dotfiles/config
+rm -rf /home/harry/dotfiles/local
+rm -rf /home/harry/dotfiles/xinitrc
+rm -rf /home/harry/dotfiles/zshrc
+
+echo "Removed All Folders"
+
+mkdir /home/harry/dotfiles/local
+mkdir /home/harry/dotfiles/config
+mkdir /home/harry/dotfiles/local/bin
+
+echo "Created config and local folders"
+
+sync_folders=("nvim" "rofi" "cava" "dunst" "picom" "xmobar" "xmonad")
+sync_rcs=(".xinitrc" ".zshrc")
+sync_bins=("changevolume" "changebrightness" "wifimenu" "gitsyncdotfiles")
+
+for fold in ${sync_folders[@]};
+do
+  echo "Syncing Config: ${fold}"
+  rsync -r "/home/harry/.config/${fold}/" "/home/harry/dotfiles/config/${fold}/"
+done
+
+for rcs in ${sync_rcs[@]};
+do 
+  echo "Syncing rc: ${rcs}"
+  rsync "/home/harry/${rcs}" "/home/harry/dotfiles/${rcs#*.}"
+done
+
+for bins in ${sync_bins[@]};
+do
+  echo "Syncing bin: ${bins}"
+  rsync "/home/harry/.local/bin/${bins}" "/home/harry/dotfiles/local/bin/${bins}"
+done
+
+rm -rf /home/harry/dotfiles/config/nvim/.git /home/harry/dotfiles/config/nvim/.github
+
+# Modify the lines of the
+sed -i 's/^export [A-Za-z_/.%]*=.*/export REDACTED_SECRET/' /home/harry/dotfiles/zshrc
+
+for file in /home/harry/dotfiles/*;
+do
+  if [[ -f $file ]]; then
+    echo "Redacting secrets in: ${file}"
+    sed -i 's/^export [A-Za-z_/.%]*=.*/export REDACTED_SECRET/' $file
+  fi
+
+done
+
+echo "Success!"
+
+exit 0
